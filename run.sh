@@ -1,42 +1,47 @@
 #!/bin/bash
 
-# Define a pasta do script como diretório de execução
+# Define the script folder as the working directory
 cd "$(dirname "$0")"
 
 echo "========================================="
-echo "⚙️  Iniciando Ponte Tuya-Klipper Local"
+echo "⚙️  Starting Local Tuya-Klipper Bridge"
 echo "========================================="
 
-# 1. Verifica se o ambiente virtual existe, se não, cria
+# 1. Check if the virtual environment exists, if not, create it
 if [ ! -d "venv" ]; then
-    echo "📦 Ambiente virtual não encontrado. Criando venv..."
+    echo "📦 Virtual environment not found. Creating venv..."
     python3 -m venv venv
 fi
 
-# 2. Ativa o ambiente virtual
-echo "🔄 Ativando ambiente virtual..."
+# 2. Activate the virtual environment
+echo "🔄 Activating virtual environment..."
 source venv/bin/activate
 
-# 3. Instala/Atualiza as dependências de forma isolada
-echo "📥 Verificando e instalando dependências..."
+# 3. Install/Update dependencies in an isolated way
+echo "📥 Checking and installing dependencies..."
 pip install --upgrade pip --quiet
 pip install -r requirements.txt --quiet
 
-# 4. Gerencia o arquivo .env
+# 4. Manage the .env file
 if [ ! -f ".env" ]; then
-    echo "⚠️  Arquivo .env não configurado!"
+    echo "⚠️  .env file not configured!"
     if [ -f ".env.example" ]; then
         cp .env.example .env
-        echo "📝 Arquivo '.env' gerado a partir do modelo."
-        echo "🛑 Edite o arquivo '.env' com suas chaves da Tuya antes de rodar novamente."
+        echo "📝 Generated '.env' file from the template."
+        echo "🛑 Edit the '.env' file with your Tuya credentials before running again."
         exit 0
     else
-        echo "❌ Erro catastrófico: .env.example não foi encontrado."
+        echo "❌ Fatal error: .env.example was not found."
         exit 1
     fi
 fi
 
-# 5. Roda a aplicação Flask
-echo "🚀 Servidor Flask ativo e rodando!"
+# 5. Run the Flask application with gunicorn for production
+echo "🚀 Flask server is up and running!"
 echo "========================================="
-python3 app.py
+
+# Load the port from the .env file, default to 5000 if not found
+source .env
+PORT=${FLASK_PORT:-5000}
+
+exec gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 4 app:app

@@ -12,3 +12,7 @@ __pycache__/
 # Ambiente virtual (caso exista na pasta)
 venv/
 .venv/
+
+# Docs and Tests generated content (Copilot rules)
+docs/
+tests/
