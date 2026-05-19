@@ -31,7 +31,7 @@ def get_device() -> tinytuya.OutletDevice:
     device.set_version(VERSION)
     return device
 
-@app.route('/light/status', methods=['GET'])
+@app.route('/printer/status', methods=['GET'])
 def get_status() -> Tuple[Any, int]:
     """Retrieve the current status of the device."""
     try:
@@ -47,7 +47,7 @@ def get_status() -> Tuple[Any, int]:
         logger.error(f"Error fetching status: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/light/on', methods=['GET', 'POST'])
+@app.route('/printer/on', methods=['GET', 'POST'])
 def turn_on() -> Tuple[Any, int]:
     """Turn the Tuya device on."""
     try:
@@ -59,7 +59,7 @@ def turn_on() -> Tuple[Any, int]:
         logger.error(f"Error turning on the device: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/light/off', methods=['GET', 'POST'])
+@app.route('/printer/off', methods=['GET', 'POST'])
 def turn_off() -> Tuple[Any, int]:
     """Turn the Tuya device off."""
     try:
