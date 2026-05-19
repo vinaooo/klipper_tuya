@@ -1,5 +1,6 @@
 import os
 import logging
+import time
 from typing import Tuple, Dict, Any
 import tinytuya
 from flask import Flask, jsonify
@@ -49,12 +50,16 @@ def get_status() -> Tuple[Any, int]:
 
 @app.route('/printer/on', methods=['GET', 'POST'])
 def turn_on() -> Tuple[Any, int]:
-    """Turn the Tuya device on."""
+    """Turn the Tuya device on with a hardware initialization delay."""
     try:
         device = get_device()
         device.turn_on(switch=DP_SWITCH)
-        logger.info("Device turned ON")
-        # ADICIONADO "on": True NO RETORNO
+        logger.info("Device turned ON. Waiting for USB bus to initialize...")
+        
+        # >> PULO DO GATO: Aguarda 7 segundos para a placa dar o boot e o udev mapear a USB
+        time.sleep(7) 
+        
+        logger.info("Hardware delay concluded. Ready for Klipper connection.")
         return jsonify({"status": "success", "action": "on", "on": True}), 200
     except Exception as e:
         logger.error(f"Error turning on the device: {e}")
