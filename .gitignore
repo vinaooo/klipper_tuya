@@ -1,0 +1,14 @@
+# Configurações e credenciais locais
+.env
+
+# Arquivos de dados e caches locais da Tuya
+*.json
+*.log
+
+# Caches de execução do Python
+__pycache__/
+*.py[cod]
+
+# Ambiente virtual (caso exista na pasta)
+venv/
+.venv/
