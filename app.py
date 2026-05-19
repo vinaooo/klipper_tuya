@@ -54,7 +54,8 @@ def turn_on() -> Tuple[Any, int]:
         device = get_device()
         device.turn_on(switch=DP_SWITCH)
         logger.info("Device turned ON")
-        return jsonify({"status": "success", "action": "on"}), 200
+        # ADICIONADO "on": True NO RETORNO
+        return jsonify({"status": "success", "action": "on", "on": True}), 200
     except Exception as e:
         logger.error(f"Error turning on the device: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -66,7 +67,8 @@ def turn_off() -> Tuple[Any, int]:
         device = get_device()
         device.turn_off(switch=DP_SWITCH)
         logger.info("Device turned OFF")
-        return jsonify({"status": "success", "action": "off"}), 200
+        # ADICIONADO "on": False NO RETORNO
+        return jsonify({"status": "success", "action": "off", "on": False}), 200
     except Exception as e:
         logger.error(f"Error turning off the device: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500
